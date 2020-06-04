@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-type Mock struct {
+type srvUsersMock struct {
 	AuthStub        func(context.Context, *srv_users.AuthRequest, ...grpc.CallOption) (*srv_users.AuthResponse, error)
 	authMutex       sync.RWMutex
 	authArgsForCall []struct {
@@ -44,7 +44,7 @@ type Mock struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *Mock) Auth(arg1 context.Context, arg2 *srv_users.AuthRequest, arg3 ...grpc.CallOption) (*srv_users.AuthResponse, error) {
+func (fake *srvUsersMock) Auth(arg1 context.Context, arg2 *srv_users.AuthRequest, arg3 ...grpc.CallOption) (*srv_users.AuthResponse, error) {
 	fake.authMutex.Lock()
 	ret, specificReturn := fake.authReturnsOnCall[len(fake.authArgsForCall)]
 	fake.authArgsForCall = append(fake.authArgsForCall, struct {
@@ -64,26 +64,26 @@ func (fake *Mock) Auth(arg1 context.Context, arg2 *srv_users.AuthRequest, arg3 .
 	return fakeReturns.result1, fakeReturns.result2
 }
 
-func (fake *Mock) AuthCallCount() int {
+func (fake *srvUsersMock) AuthCallCount() int {
 	fake.authMutex.RLock()
 	defer fake.authMutex.RUnlock()
 	return len(fake.authArgsForCall)
 }
 
-func (fake *Mock) AuthCalls(stub func(context.Context, *srv_users.AuthRequest, ...grpc.CallOption) (*srv_users.AuthResponse, error)) {
+func (fake *srvUsersMock) AuthCalls(stub func(context.Context, *srv_users.AuthRequest, ...grpc.CallOption) (*srv_users.AuthResponse, error)) {
 	fake.authMutex.Lock()
 	defer fake.authMutex.Unlock()
 	fake.AuthStub = stub
 }
 
-func (fake *Mock) AuthArgsForCall(i int) (context.Context, *srv_users.AuthRequest, []grpc.CallOption) {
+func (fake *srvUsersMock) AuthArgsForCall(i int) (context.Context, *srv_users.AuthRequest, []grpc.CallOption) {
 	fake.authMutex.RLock()
 	defer fake.authMutex.RUnlock()
 	argsForCall := fake.authArgsForCall[i]
 	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
 }
 
-func (fake *Mock) AuthReturns(result1 *srv_users.AuthResponse, result2 error) {
+func (fake *srvUsersMock) AuthReturns(result1 *srv_users.AuthResponse, result2 error) {
 	fake.authMutex.Lock()
 	defer fake.authMutex.Unlock()
 	fake.AuthStub = nil
@@ -93,7 +93,7 @@ func (fake *Mock) AuthReturns(result1 *srv_users.AuthResponse, result2 error) {
 	}{result1, result2}
 }
 
-func (fake *Mock) AuthReturnsOnCall(i int, result1 *srv_users.AuthResponse, result2 error) {
+func (fake *srvUsersMock) AuthReturnsOnCall(i int, result1 *srv_users.AuthResponse, result2 error) {
 	fake.authMutex.Lock()
 	defer fake.authMutex.Unlock()
 	fake.AuthStub = nil
@@ -109,7 +109,7 @@ func (fake *Mock) AuthReturnsOnCall(i int, result1 *srv_users.AuthResponse, resu
 	}{result1, result2}
 }
 
-func (fake *Mock) CreateUser(arg1 context.Context, arg2 *srv_users.CreateUserRequest, arg3 ...grpc.CallOption) (*srv_users.CreateUserResponse, error) {
+func (fake *srvUsersMock) CreateUser(arg1 context.Context, arg2 *srv_users.CreateUserRequest, arg3 ...grpc.CallOption) (*srv_users.CreateUserResponse, error) {
 	fake.createUserMutex.Lock()
 	ret, specificReturn := fake.createUserReturnsOnCall[len(fake.createUserArgsForCall)]
 	fake.createUserArgsForCall = append(fake.createUserArgsForCall, struct {
@@ -129,26 +129,26 @@ func (fake *Mock) CreateUser(arg1 context.Context, arg2 *srv_users.CreateUserReq
 	return fakeReturns.result1, fakeReturns.result2
 }
 
-func (fake *Mock) CreateUserCallCount() int {
+func (fake *srvUsersMock) CreateUserCallCount() int {
 	fake.createUserMutex.RLock()
 	defer fake.createUserMutex.RUnlock()
 	return len(fake.createUserArgsForCall)
 }
 
-func (fake *Mock) CreateUserCalls(stub func(context.Context, *srv_users.CreateUserRequest, ...grpc.CallOption) (*srv_users.CreateUserResponse, error)) {
+func (fake *srvUsersMock) CreateUserCalls(stub func(context.Context, *srv_users.CreateUserRequest, ...grpc.CallOption) (*srv_users.CreateUserResponse, error)) {
 	fake.createUserMutex.Lock()
 	defer fake.createUserMutex.Unlock()
 	fake.CreateUserStub = stub
 }
 
-func (fake *Mock) CreateUserArgsForCall(i int) (context.Context, *srv_users.CreateUserRequest, []grpc.CallOption) {
+func (fake *srvUsersMock) CreateUserArgsForCall(i int) (context.Context, *srv_users.CreateUserRequest, []grpc.CallOption) {
 	fake.createUserMutex.RLock()
 	defer fake.createUserMutex.RUnlock()
 	argsForCall := fake.createUserArgsForCall[i]
 	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
 }
 
-func (fake *Mock) CreateUserReturns(result1 *srv_users.CreateUserResponse, result2 error) {
+func (fake *srvUsersMock) CreateUserReturns(result1 *srv_users.CreateUserResponse, result2 error) {
 	fake.createUserMutex.Lock()
 	defer fake.createUserMutex.Unlock()
 	fake.CreateUserStub = nil
@@ -158,7 +158,7 @@ func (fake *Mock) CreateUserReturns(result1 *srv_users.CreateUserResponse, resul
 	}{result1, result2}
 }
 
-func (fake *Mock) CreateUserReturnsOnCall(i int, result1 *srv_users.CreateUserResponse, result2 error) {
+func (fake *srvUsersMock) CreateUserReturnsOnCall(i int, result1 *srv_users.CreateUserResponse, result2 error) {
 	fake.createUserMutex.Lock()
 	defer fake.createUserMutex.Unlock()
 	fake.CreateUserStub = nil
@@ -174,7 +174,7 @@ func (fake *Mock) CreateUserReturnsOnCall(i int, result1 *srv_users.CreateUserRe
 	}{result1, result2}
 }
 
-func (fake *Mock) Invocations() map[string][][]interface{} {
+func (fake *srvUsersMock) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
 	fake.authMutex.RLock()
@@ -188,7 +188,7 @@ func (fake *Mock) Invocations() map[string][][]interface{} {
 	return copiedInvocations
 }
 
-func (fake *Mock) recordInvocation(key string, args []interface{}) {
+func (fake *srvUsersMock) recordInvocation(key string, args []interface{}) {
 	fake.invocationsMutex.Lock()
 	defer fake.invocationsMutex.Unlock()
 	if fake.invocations == nil {
@@ -200,4 +200,4 @@ func (fake *Mock) recordInvocation(key string, args []interface{}) {
 	fake.invocations[key] = append(fake.invocations[key], args)
 }
 
-var _ srv_users.UsersServiceClient = new(Mock)
+var _ srv_users.UsersServiceClient = new(srvUsersMock)
