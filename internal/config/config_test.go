@@ -48,7 +48,6 @@ func TestLoad(t *testing.T) {
 	assert.Equal(t, "password", cfg.Redis.Password)
 	assert.Equal(t, 10, cfg.Redis.MaxIdle)
 	assert.Equal(t, testDuration, cfg.Redis.IdleTimeout)
-	assert.Equal(t, "8081", cfg.Server.GatewayPort)
 	assert.Equal(t, testDuration, cfg.Server.GracefulShutdownTimeout)
 	assert.Equal(t, testDuration, cfg.Server.WriteTimeout)
 	assert.Equal(t, testDuration, cfg.Server.ReadTimeout)

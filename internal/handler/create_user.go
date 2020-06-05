@@ -10,7 +10,7 @@ import (
 )
 
 func (h *Handler) CreateUser(ctx context.Context, req *srvUsers.CreateUserRequest) (*srvUsers.CreateUserResponse, error) {
-	h.logger.WithFields(logrus.Fields{"method": "handler.CreateUser"})
+	h.logger.WithFields(logrus.Fields{"method": "handler.CreateUser"}).Trace(req)
 
 	rsp := &srvUsers.CreateUserResponse{}
 	user := storage.User{
