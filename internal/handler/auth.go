@@ -10,7 +10,7 @@ import (
 func (h *Handler) Auth(ctx context.Context, req *srvUsers.AuthRequest) (*srvUsers.AuthResponse, error) {
 	r := &srvUsers.AuthResponse{}
 
-	token, err := h.service.Auth(req.Email, req.Password)
+	token, err := h.service.Auth(ctx, req.Email, req.Password)
 	if err != nil {
 		return r, errors.Wrap(err, "unable to authenticate")
 	}

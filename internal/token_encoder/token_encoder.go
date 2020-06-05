@@ -28,13 +28,13 @@ func (e *TokenEncoder) Encode(user *storage.User) (string, error) {
 	// Store the Claims
 	claims := token_decoder.CustomClaims{
 		User: &token_decoder.JWTUser{
-			ID:    user.ID,
-			Name:  user.Name,
-			Email: user.Email,
+			ID:      user.ID,
+			Email:   user.Email,
+			Company: user.Company,
 		},
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireToken,
-			Issuer:    "shippy.user",
+			Issuer:    "srv.users",
 		},
 	}
 

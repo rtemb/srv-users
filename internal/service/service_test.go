@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"testing"
 
 	store "github.com/rtemb/srv-users/internal/storage"
@@ -45,7 +46,7 @@ func (a *ServiceSuite) Test_CreateUser() {
 		Password: "test-pass",
 	}
 
-	err := a.service.CreateUser(user)
+	err := a.service.CreateUser(context.Background(), user)
 	a.Require().NoError(err)
 }
 
@@ -63,7 +64,7 @@ func (a *ServiceSuite) Test_Auth() {
 		return &user, nil
 	})
 
-	token, err := a.service.Auth("test@example.com", "test-pass")
+	token, err := a.service.Auth(context.Background(), "test@example.com", "test-pass")
 	a.Require().NoError(err)
 	a.NotEmpty(token)
 
@@ -75,6 +76,6 @@ func (a *ServiceSuite) Test_Auth() {
 	a.NotEmpty(claims.StandardClaims)
 
 	a.Equal(user.ID, claims.User.ID)
-	a.Equal(user.Name, claims.User.Name)
+	a.Equal(user.Company, claims.User.Company)
 	a.Equal(user.Email, claims.User.Email)
 }

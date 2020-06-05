@@ -18,7 +18,7 @@ func (h *Handler) CreateUser(ctx context.Context, req *srvUsers.CreateUserReques
 		Email:    req.Email,
 		Password: req.Password,
 	}
-	err := h.service.CreateUser(user)
+	err := h.service.CreateUser(ctx, user)
 	if err != nil {
 		err = errors.Wrap(err, "unable to create user")
 		h.logger.Error(err)

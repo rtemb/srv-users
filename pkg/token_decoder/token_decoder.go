@@ -6,9 +6,9 @@ import (
 )
 
 type JWTUser struct {
-	ID    string
-	Name  string
-	Email string
+	ID      string
+	Email   string
+	Company string
 }
 
 // CustomClaims is our custom metadata, which will be hashed

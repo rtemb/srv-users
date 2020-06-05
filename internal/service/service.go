@@ -1,6 +1,8 @@
 package service
 
 import (
+	"context"
+
 	"github.com/pkg/errors"
 	"github.com/rtemb/srv-users/internal/storage"
 	"github.com/rtemb/srv-users/internal/token_encoder"
@@ -18,7 +20,7 @@ func NewService(l *logrus.Entry, s storage.Storage, te token_encoder.AuthableEnc
 	return &Service{logger: l, store: s, tokenEncoder: te}
 }
 
-func (s *Service) CreateUser(user storage.User) error {
+func (s *Service) CreateUser(ctx context.Context, user storage.User) error {
 	hashedPass, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return errors.Wrap(err, "error hashing password")
@@ -32,7 +34,7 @@ func (s *Service) CreateUser(user storage.User) error {
 	return nil
 }
 
-func (s *Service) Auth(email string, pass string) (string, error) {
+func (s *Service) Auth(ctx context.Context, email string, pass string) (string, error) {
 	token := ""
 	user, err := s.store.GetUserByEmail(email)
 	if err != nil {
