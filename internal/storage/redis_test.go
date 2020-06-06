@@ -2,7 +2,9 @@ package storage_test
 
 import (
 	"encoding/json"
+	"math/rand"
 	"os"
+	"strconv"
 	"testing"
 
 	"github.com/rtemb/srv-users/internal/config"
@@ -48,6 +50,26 @@ func (a *RedisSuite) Test_StoreAndGet() {
 	u := &store.User{}
 	err = json.Unmarshal(res.([]byte), &u)
 	a.Require().NoError(err)
+
+	a.Equal(user.Name, u.Name)
+	a.Equal(user.Company, u.Company)
+	a.Equal(user.Email, u.Email)
+	a.Equal(user.Password, u.Password)
+}
+
+func (a *RedisSuite) Test_AddUser() {
+	user := &store.User{
+		Name:     "test-name",
+		Company:  "test-company",
+		Email:    "test" + strconv.Itoa(rand.Intn(10000)) + "@example.com",
+		Password: "test-pass",
+	}
+	err := a.store.AddUser(user)
+	a.NoError(err)
+
+	u, err := a.store.GetUserByEmail(user.Email)
+	a.Require().NoError(err)
+	a.NotNil(u)
 
 	a.Equal(user.Name, u.Name)
 	a.Equal(user.Company, u.Company)

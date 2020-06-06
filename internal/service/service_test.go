@@ -2,11 +2,14 @@ package service
 
 import (
 	"context"
+	"math/rand"
+	"strconv"
 	"testing"
 
 	store "github.com/rtemb/srv-users/internal/storage"
 	"github.com/rtemb/srv-users/internal/testing/mocks"
 	"github.com/rtemb/srv-users/internal/token_encoder"
+	srvErr "github.com/rtemb/srv-users/pkg/client/errors"
 	"github.com/rtemb/srv-users/pkg/token_decoder"
 	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
@@ -38,16 +41,23 @@ func TestAPITestSuite(t *testing.T) {
 	suite.Run(t, &ServiceSuite{})
 }
 
-func (a *ServiceSuite) Test_CreateUser() {
+func (a *ServiceSuite) Test_CreateUser_Error_UserAlreadyExists() {
+	email := "test" + strconv.Itoa(rand.Intn(10)) + "@example.com"
 	user := store.User{
 		Name:     "test-name",
 		Company:  "test-company",
-		Email:    "test@example.com",
+		Email:    email,
 		Password: "test-pass",
 	}
 
+	a.storageMock.GetUserByEmailCalls(func(e string) (*store.User, error) {
+		a.Equal(user.Email, e)
+		return &user, nil
+	})
+
 	err := a.service.CreateUser(context.Background(), user)
-	a.Require().NoError(err)
+	a.Require().NotNil(err)
+	a.Contains(err.Error(), srvErr.UserAlreadyExists.Error())
 }
 
 func (a *ServiceSuite) Test_Auth() {

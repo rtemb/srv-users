@@ -3,9 +3,11 @@ package service
 import (
 	"context"
 
+	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/rtemb/srv-users/internal/storage"
 	"github.com/rtemb/srv-users/internal/token_encoder"
+	srvErr "github.com/rtemb/srv-users/pkg/client/errors"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -26,9 +28,18 @@ func (s *Service) CreateUser(ctx context.Context, user storage.User) error {
 		return errors.Wrap(err, "error hashing password")
 	}
 
+	exist, err := s.store.GetUserByEmail(user.Email)
+	if err != nil {
+		return errors.Wrap(err, srvErr.UnableToCreateUser.Error())
+	}
+	if exist != nil {
+		return srvErr.UserAlreadyExists
+	}
+
 	user.Password = string(hashedPass)
-	if err = s.store.Store(user.Email, &user); err != nil {
-		return errors.Wrap(err, "error creating user")
+	user.ID = uuid.New().String()
+	if err = s.store.AddUser(&user); err != nil {
+		return errors.Wrap(err, srvErr.UnableToCreateUser.Error())
 	}
 
 	return nil

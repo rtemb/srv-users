@@ -5,6 +5,7 @@ type Storage interface {
 	Store(key string, val interface{}) error
 	Get(key string) (interface{}, error)
 	GetUserByEmail(email string) (*User, error)
+	AddUser(user *User) error
 }
 
 type User struct {
