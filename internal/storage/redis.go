@@ -73,8 +73,13 @@ func (r *RedisStorage) StoreUser(user *User) error {
 
 func (r *RedisStorage) GetUserByEmail(email string) (*User, error) {
 	conn := r.pool.Get()
-	uID, err := conn.Do("GET", EmailToUserIDSet+email)
-	data, err := conn.Do("GET", UsersSet+uID.(string))
+	k, err := conn.Do("GET", EmailToUserIDSet+email)
+	if k == nil {
+		return nil, nil
+	}
+
+	uID := string(k.([]byte))
+	data, err := conn.Do("GET", UsersSet+uID)
 	if err != nil {
 		return nil, errors.Wrap(err, "can't get user from storage")
 	}
