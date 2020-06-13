@@ -39,6 +39,8 @@ func (s *Service) CreateUser(ctx context.Context, user storage.User) error {
 
 	user.Password = string(hashedPass)
 	user.ID = uuid.New().String()
+	user.Roles = make(map[srvUsers.Role]struct{})
+
 	if err = s.store.StoreUser(&user); err != nil {
 		return errors.Wrap(err, srvErr.UnableToCreateUser.Error())
 	}

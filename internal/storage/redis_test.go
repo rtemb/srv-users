@@ -81,16 +81,14 @@ func (a *RedisSuite) Test_AddUser() {
 }
 
 func (a *RedisSuite) Test_AddRole() {
-	role := srvUsers.Role_USER
+	//role := srvUsers.Role_USER
 	user := &store.User{
 		ID:       uuid.New().String(),
 		Name:     "test-name",
 		Company:  "test-company",
 		Email:    "test" + strconv.Itoa(rand.Intn(10000)) + "@example.com",
 		Password: "test-pass",
-		Roles: map[srvUsers.Role]struct{}{
-			role: {},
-		},
+		Roles:    make(map[srvUsers.Role]struct{}),
 	}
 	err := a.store.StoreUser(user)
 	a.NoError(err)
@@ -112,5 +110,4 @@ func (a *RedisSuite) Test_AddRole() {
 	a.Equal(user.Email, updatedUser.Email)
 	a.Equal(user.Password, updatedUser.Password)
 	a.NotNil(user.Roles[srvUsers.Role_USER_ADMIN])
-	a.NotNil(user.Roles[srvUsers.Role_USER])
 }

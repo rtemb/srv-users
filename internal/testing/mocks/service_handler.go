@@ -7,9 +7,23 @@ import (
 
 	"github.com/rtemb/srv-users/internal/handler"
 	"github.com/rtemb/srv-users/internal/storage"
+	srv_users "github.com/rtemb/srv-users/pkg/client/srv-users"
 )
 
 type ServiceHandlerMock struct {
+	AddRoleStub        func(context.Context, string, srv_users.Role) error
+	addRoleMutex       sync.RWMutex
+	addRoleArgsForCall []struct {
+		arg1 context.Context
+		arg2 string
+		arg3 srv_users.Role
+	}
+	addRoleReturns struct {
+		result1 error
+	}
+	addRoleReturnsOnCall map[int]struct {
+		result1 error
+	}
 	AuthStub        func(context.Context, string, string) (string, error)
 	authMutex       sync.RWMutex
 	authArgsForCall []struct {
@@ -39,6 +53,68 @@ type ServiceHandlerMock struct {
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
+}
+
+func (fake *ServiceHandlerMock) AddRole(arg1 context.Context, arg2 string, arg3 srv_users.Role) error {
+	fake.addRoleMutex.Lock()
+	ret, specificReturn := fake.addRoleReturnsOnCall[len(fake.addRoleArgsForCall)]
+	fake.addRoleArgsForCall = append(fake.addRoleArgsForCall, struct {
+		arg1 context.Context
+		arg2 string
+		arg3 srv_users.Role
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("AddRole", []interface{}{arg1, arg2, arg3})
+	fake.addRoleMutex.Unlock()
+	if fake.AddRoleStub != nil {
+		return fake.AddRoleStub(arg1, arg2, arg3)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	fakeReturns := fake.addRoleReturns
+	return fakeReturns.result1
+}
+
+func (fake *ServiceHandlerMock) AddRoleCallCount() int {
+	fake.addRoleMutex.RLock()
+	defer fake.addRoleMutex.RUnlock()
+	return len(fake.addRoleArgsForCall)
+}
+
+func (fake *ServiceHandlerMock) AddRoleCalls(stub func(context.Context, string, srv_users.Role) error) {
+	fake.addRoleMutex.Lock()
+	defer fake.addRoleMutex.Unlock()
+	fake.AddRoleStub = stub
+}
+
+func (fake *ServiceHandlerMock) AddRoleArgsForCall(i int) (context.Context, string, srv_users.Role) {
+	fake.addRoleMutex.RLock()
+	defer fake.addRoleMutex.RUnlock()
+	argsForCall := fake.addRoleArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *ServiceHandlerMock) AddRoleReturns(result1 error) {
+	fake.addRoleMutex.Lock()
+	defer fake.addRoleMutex.Unlock()
+	fake.AddRoleStub = nil
+	fake.addRoleReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *ServiceHandlerMock) AddRoleReturnsOnCall(i int, result1 error) {
+	fake.addRoleMutex.Lock()
+	defer fake.addRoleMutex.Unlock()
+	fake.AddRoleStub = nil
+	if fake.addRoleReturnsOnCall == nil {
+		fake.addRoleReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.addRoleReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
 }
 
 func (fake *ServiceHandlerMock) Auth(arg1 context.Context, arg2 string, arg3 string) (string, error) {
@@ -170,6 +246,8 @@ func (fake *ServiceHandlerMock) CreateUserReturnsOnCall(i int, result1 error) {
 func (fake *ServiceHandlerMock) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
+	fake.addRoleMutex.RLock()
+	defer fake.addRoleMutex.RUnlock()
 	fake.authMutex.RLock()
 	defer fake.authMutex.RUnlock()
 	fake.createUserMutex.RLock()
