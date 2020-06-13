@@ -6,6 +6,7 @@ package srv_users
 import (
 	fmt "fmt"
 	proto "github.com/gogo/protobuf/proto"
+	_ "github.com/golang/protobuf/ptypes/empty"
 	github_com_mwitkow_go_proto_validators "github.com/mwitkow/go-proto-validators"
 	math "math"
 )
@@ -15,6 +16,9 @@ var _ = proto.Marshal
 var _ = fmt.Errorf
 var _ = math.Inf
 
+func (this *AddRoleRequest) Validate() error {
+	return nil
+}
 func (this *AuthRequest) Validate() error {
 	return nil
 }

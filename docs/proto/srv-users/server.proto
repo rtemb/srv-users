@@ -1,6 +1,8 @@
 syntax = "proto3";
 
 package srv.users;
+import "google/protobuf/empty.proto";
+
 
 service UsersService {
     rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {
@@ -8,6 +10,21 @@ service UsersService {
 
     rpc Auth (AuthRequest) returns (AuthResponse) {
     }
+
+    rpc AddRole (AddRoleRequest) returns (google.protobuf.Empty) {
+    }
+}
+
+
+message AddRoleRequest {
+    string uuid = 1;
+    Role role = 2;
+}
+
+enum Role {
+    UNKNOWN = 0;
+    USER = 1;
+    USER_ADMIN = 2;
 }
 
 message AuthRequest {

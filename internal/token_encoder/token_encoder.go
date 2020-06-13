@@ -25,7 +25,7 @@ func NewEncoder(key string) *TokenEncoder {
 func (e *TokenEncoder) Encode(user *storage.User) (string, error) {
 	expireToken := time.Now().Add(time.Hour * 72).Unix()
 
-	// Store the Claims
+	// Set the Claims
 	claims := token_decoder.CustomClaims{
 		User: &token_decoder.JWTUser{
 			ID:      user.ID,
@@ -38,7 +38,7 @@ func (e *TokenEncoder) Encode(user *storage.User) (string, error) {
 		},
 	}
 
-	// Store token
+	// Set token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	// Sign token and return

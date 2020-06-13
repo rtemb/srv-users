@@ -7,9 +7,25 @@ import (
 
 	srv_users "github.com/rtemb/srv-users/pkg/client/srv-users"
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type SrvUsersMock struct {
+	AddRoleStub        func(context.Context, *srv_users.AddRoleRequest, ...grpc.CallOption) (*emptypb.Empty, error)
+	addRoleMutex       sync.RWMutex
+	addRoleArgsForCall []struct {
+		arg1 context.Context
+		arg2 *srv_users.AddRoleRequest
+		arg3 []grpc.CallOption
+	}
+	addRoleReturns struct {
+		result1 *emptypb.Empty
+		result2 error
+	}
+	addRoleReturnsOnCall map[int]struct {
+		result1 *emptypb.Empty
+		result2 error
+	}
 	AuthStub        func(context.Context, *srv_users.AuthRequest, ...grpc.CallOption) (*srv_users.AuthResponse, error)
 	authMutex       sync.RWMutex
 	authArgsForCall []struct {
@@ -42,6 +58,71 @@ type SrvUsersMock struct {
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
+}
+
+func (fake *SrvUsersMock) AddRole(arg1 context.Context, arg2 *srv_users.AddRoleRequest, arg3 ...grpc.CallOption) (*emptypb.Empty, error) {
+	fake.addRoleMutex.Lock()
+	ret, specificReturn := fake.addRoleReturnsOnCall[len(fake.addRoleArgsForCall)]
+	fake.addRoleArgsForCall = append(fake.addRoleArgsForCall, struct {
+		arg1 context.Context
+		arg2 *srv_users.AddRoleRequest
+		arg3 []grpc.CallOption
+	}{arg1, arg2, arg3})
+	fake.recordInvocation("AddRole", []interface{}{arg1, arg2, arg3})
+	fake.addRoleMutex.Unlock()
+	if fake.AddRoleStub != nil {
+		return fake.AddRoleStub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.addRoleReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *SrvUsersMock) AddRoleCallCount() int {
+	fake.addRoleMutex.RLock()
+	defer fake.addRoleMutex.RUnlock()
+	return len(fake.addRoleArgsForCall)
+}
+
+func (fake *SrvUsersMock) AddRoleCalls(stub func(context.Context, *srv_users.AddRoleRequest, ...grpc.CallOption) (*emptypb.Empty, error)) {
+	fake.addRoleMutex.Lock()
+	defer fake.addRoleMutex.Unlock()
+	fake.AddRoleStub = stub
+}
+
+func (fake *SrvUsersMock) AddRoleArgsForCall(i int) (context.Context, *srv_users.AddRoleRequest, []grpc.CallOption) {
+	fake.addRoleMutex.RLock()
+	defer fake.addRoleMutex.RUnlock()
+	argsForCall := fake.addRoleArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *SrvUsersMock) AddRoleReturns(result1 *emptypb.Empty, result2 error) {
+	fake.addRoleMutex.Lock()
+	defer fake.addRoleMutex.Unlock()
+	fake.AddRoleStub = nil
+	fake.addRoleReturns = struct {
+		result1 *emptypb.Empty
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *SrvUsersMock) AddRoleReturnsOnCall(i int, result1 *emptypb.Empty, result2 error) {
+	fake.addRoleMutex.Lock()
+	defer fake.addRoleMutex.Unlock()
+	fake.AddRoleStub = nil
+	if fake.addRoleReturnsOnCall == nil {
+		fake.addRoleReturnsOnCall = make(map[int]struct {
+			result1 *emptypb.Empty
+			result2 error
+		})
+	}
+	fake.addRoleReturnsOnCall[i] = struct {
+		result1 *emptypb.Empty
+		result2 error
+	}{result1, result2}
 }
 
 func (fake *SrvUsersMock) Auth(arg1 context.Context, arg2 *srv_users.AuthRequest, arg3 ...grpc.CallOption) (*srv_users.AuthResponse, error) {
@@ -177,6 +258,8 @@ func (fake *SrvUsersMock) CreateUserReturnsOnCall(i int, result1 *srv_users.Crea
 func (fake *SrvUsersMock) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
+	fake.addRoleMutex.RLock()
+	defer fake.addRoleMutex.RUnlock()
 	fake.authMutex.RLock()
 	defer fake.authMutex.RUnlock()
 	fake.createUserMutex.RLock()

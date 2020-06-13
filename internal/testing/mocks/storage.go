@@ -8,30 +8,6 @@ import (
 )
 
 type StorageMock struct {
-	AddUserStub        func(*storage.User) error
-	addUserMutex       sync.RWMutex
-	addUserArgsForCall []struct {
-		arg1 *storage.User
-	}
-	addUserReturns struct {
-		result1 error
-	}
-	addUserReturnsOnCall map[int]struct {
-		result1 error
-	}
-	GetStub        func(string) (interface{}, error)
-	getMutex       sync.RWMutex
-	getArgsForCall []struct {
-		arg1 string
-	}
-	getReturns struct {
-		result1 interface{}
-		result2 error
-	}
-	getReturnsOnCall map[int]struct {
-		result1 interface{}
-		result2 error
-	}
 	GetUserByEmailStub        func(string) (*storage.User, error)
 	getUserByEmailMutex       sync.RWMutex
 	getUserByEmailArgsForCall []struct {
@@ -45,143 +21,32 @@ type StorageMock struct {
 		result1 *storage.User
 		result2 error
 	}
-	StoreStub        func(string, interface{}) error
-	storeMutex       sync.RWMutex
-	storeArgsForCall []struct {
+	GetUserByUUIDStub        func(string) (*storage.User, error)
+	getUserByUUIDMutex       sync.RWMutex
+	getUserByUUIDArgsForCall []struct {
 		arg1 string
-		arg2 interface{}
 	}
-	storeReturns struct {
+	getUserByUUIDReturns struct {
+		result1 *storage.User
+		result2 error
+	}
+	getUserByUUIDReturnsOnCall map[int]struct {
+		result1 *storage.User
+		result2 error
+	}
+	StoreUserStub        func(*storage.User) error
+	storeUserMutex       sync.RWMutex
+	storeUserArgsForCall []struct {
+		arg1 *storage.User
+	}
+	storeUserReturns struct {
 		result1 error
 	}
-	storeReturnsOnCall map[int]struct {
+	storeUserReturnsOnCall map[int]struct {
 		result1 error
 	}
 	invocations      map[string][][]interface{}
 	invocationsMutex sync.RWMutex
-}
-
-func (fake *StorageMock) AddUser(arg1 *storage.User) error {
-	fake.addUserMutex.Lock()
-	ret, specificReturn := fake.addUserReturnsOnCall[len(fake.addUserArgsForCall)]
-	fake.addUserArgsForCall = append(fake.addUserArgsForCall, struct {
-		arg1 *storage.User
-	}{arg1})
-	fake.recordInvocation("AddUser", []interface{}{arg1})
-	fake.addUserMutex.Unlock()
-	if fake.AddUserStub != nil {
-		return fake.AddUserStub(arg1)
-	}
-	if specificReturn {
-		return ret.result1
-	}
-	fakeReturns := fake.addUserReturns
-	return fakeReturns.result1
-}
-
-func (fake *StorageMock) AddUserCallCount() int {
-	fake.addUserMutex.RLock()
-	defer fake.addUserMutex.RUnlock()
-	return len(fake.addUserArgsForCall)
-}
-
-func (fake *StorageMock) AddUserCalls(stub func(*storage.User) error) {
-	fake.addUserMutex.Lock()
-	defer fake.addUserMutex.Unlock()
-	fake.AddUserStub = stub
-}
-
-func (fake *StorageMock) AddUserArgsForCall(i int) *storage.User {
-	fake.addUserMutex.RLock()
-	defer fake.addUserMutex.RUnlock()
-	argsForCall := fake.addUserArgsForCall[i]
-	return argsForCall.arg1
-}
-
-func (fake *StorageMock) AddUserReturns(result1 error) {
-	fake.addUserMutex.Lock()
-	defer fake.addUserMutex.Unlock()
-	fake.AddUserStub = nil
-	fake.addUserReturns = struct {
-		result1 error
-	}{result1}
-}
-
-func (fake *StorageMock) AddUserReturnsOnCall(i int, result1 error) {
-	fake.addUserMutex.Lock()
-	defer fake.addUserMutex.Unlock()
-	fake.AddUserStub = nil
-	if fake.addUserReturnsOnCall == nil {
-		fake.addUserReturnsOnCall = make(map[int]struct {
-			result1 error
-		})
-	}
-	fake.addUserReturnsOnCall[i] = struct {
-		result1 error
-	}{result1}
-}
-
-func (fake *StorageMock) Get(arg1 string) (interface{}, error) {
-	fake.getMutex.Lock()
-	ret, specificReturn := fake.getReturnsOnCall[len(fake.getArgsForCall)]
-	fake.getArgsForCall = append(fake.getArgsForCall, struct {
-		arg1 string
-	}{arg1})
-	fake.recordInvocation("Get", []interface{}{arg1})
-	fake.getMutex.Unlock()
-	if fake.GetStub != nil {
-		return fake.GetStub(arg1)
-	}
-	if specificReturn {
-		return ret.result1, ret.result2
-	}
-	fakeReturns := fake.getReturns
-	return fakeReturns.result1, fakeReturns.result2
-}
-
-func (fake *StorageMock) GetCallCount() int {
-	fake.getMutex.RLock()
-	defer fake.getMutex.RUnlock()
-	return len(fake.getArgsForCall)
-}
-
-func (fake *StorageMock) GetCalls(stub func(string) (interface{}, error)) {
-	fake.getMutex.Lock()
-	defer fake.getMutex.Unlock()
-	fake.GetStub = stub
-}
-
-func (fake *StorageMock) GetArgsForCall(i int) string {
-	fake.getMutex.RLock()
-	defer fake.getMutex.RUnlock()
-	argsForCall := fake.getArgsForCall[i]
-	return argsForCall.arg1
-}
-
-func (fake *StorageMock) GetReturns(result1 interface{}, result2 error) {
-	fake.getMutex.Lock()
-	defer fake.getMutex.Unlock()
-	fake.GetStub = nil
-	fake.getReturns = struct {
-		result1 interface{}
-		result2 error
-	}{result1, result2}
-}
-
-func (fake *StorageMock) GetReturnsOnCall(i int, result1 interface{}, result2 error) {
-	fake.getMutex.Lock()
-	defer fake.getMutex.Unlock()
-	fake.GetStub = nil
-	if fake.getReturnsOnCall == nil {
-		fake.getReturnsOnCall = make(map[int]struct {
-			result1 interface{}
-			result2 error
-		})
-	}
-	fake.getReturnsOnCall[i] = struct {
-		result1 interface{}
-		result2 error
-	}{result1, result2}
 }
 
 func (fake *StorageMock) GetUserByEmail(arg1 string) (*storage.User, error) {
@@ -247,63 +112,125 @@ func (fake *StorageMock) GetUserByEmailReturnsOnCall(i int, result1 *storage.Use
 	}{result1, result2}
 }
 
-func (fake *StorageMock) Store(arg1 string, arg2 interface{}) error {
-	fake.storeMutex.Lock()
-	ret, specificReturn := fake.storeReturnsOnCall[len(fake.storeArgsForCall)]
-	fake.storeArgsForCall = append(fake.storeArgsForCall, struct {
+func (fake *StorageMock) GetUserByUUID(arg1 string) (*storage.User, error) {
+	fake.getUserByUUIDMutex.Lock()
+	ret, specificReturn := fake.getUserByUUIDReturnsOnCall[len(fake.getUserByUUIDArgsForCall)]
+	fake.getUserByUUIDArgsForCall = append(fake.getUserByUUIDArgsForCall, struct {
 		arg1 string
-		arg2 interface{}
-	}{arg1, arg2})
-	fake.recordInvocation("Store", []interface{}{arg1, arg2})
-	fake.storeMutex.Unlock()
-	if fake.StoreStub != nil {
-		return fake.StoreStub(arg1, arg2)
+	}{arg1})
+	fake.recordInvocation("GetUserByUUID", []interface{}{arg1})
+	fake.getUserByUUIDMutex.Unlock()
+	if fake.GetUserByUUIDStub != nil {
+		return fake.GetUserByUUIDStub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	fakeReturns := fake.getUserByUUIDReturns
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *StorageMock) GetUserByUUIDCallCount() int {
+	fake.getUserByUUIDMutex.RLock()
+	defer fake.getUserByUUIDMutex.RUnlock()
+	return len(fake.getUserByUUIDArgsForCall)
+}
+
+func (fake *StorageMock) GetUserByUUIDCalls(stub func(string) (*storage.User, error)) {
+	fake.getUserByUUIDMutex.Lock()
+	defer fake.getUserByUUIDMutex.Unlock()
+	fake.GetUserByUUIDStub = stub
+}
+
+func (fake *StorageMock) GetUserByUUIDArgsForCall(i int) string {
+	fake.getUserByUUIDMutex.RLock()
+	defer fake.getUserByUUIDMutex.RUnlock()
+	argsForCall := fake.getUserByUUIDArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *StorageMock) GetUserByUUIDReturns(result1 *storage.User, result2 error) {
+	fake.getUserByUUIDMutex.Lock()
+	defer fake.getUserByUUIDMutex.Unlock()
+	fake.GetUserByUUIDStub = nil
+	fake.getUserByUUIDReturns = struct {
+		result1 *storage.User
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *StorageMock) GetUserByUUIDReturnsOnCall(i int, result1 *storage.User, result2 error) {
+	fake.getUserByUUIDMutex.Lock()
+	defer fake.getUserByUUIDMutex.Unlock()
+	fake.GetUserByUUIDStub = nil
+	if fake.getUserByUUIDReturnsOnCall == nil {
+		fake.getUserByUUIDReturnsOnCall = make(map[int]struct {
+			result1 *storage.User
+			result2 error
+		})
+	}
+	fake.getUserByUUIDReturnsOnCall[i] = struct {
+		result1 *storage.User
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *StorageMock) StoreUser(arg1 *storage.User) error {
+	fake.storeUserMutex.Lock()
+	ret, specificReturn := fake.storeUserReturnsOnCall[len(fake.storeUserArgsForCall)]
+	fake.storeUserArgsForCall = append(fake.storeUserArgsForCall, struct {
+		arg1 *storage.User
+	}{arg1})
+	fake.recordInvocation("StoreUser", []interface{}{arg1})
+	fake.storeUserMutex.Unlock()
+	if fake.StoreUserStub != nil {
+		return fake.StoreUserStub(arg1)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.storeReturns
+	fakeReturns := fake.storeUserReturns
 	return fakeReturns.result1
 }
 
-func (fake *StorageMock) StoreCallCount() int {
-	fake.storeMutex.RLock()
-	defer fake.storeMutex.RUnlock()
-	return len(fake.storeArgsForCall)
+func (fake *StorageMock) StoreUserCallCount() int {
+	fake.storeUserMutex.RLock()
+	defer fake.storeUserMutex.RUnlock()
+	return len(fake.storeUserArgsForCall)
 }
 
-func (fake *StorageMock) StoreCalls(stub func(string, interface{}) error) {
-	fake.storeMutex.Lock()
-	defer fake.storeMutex.Unlock()
-	fake.StoreStub = stub
+func (fake *StorageMock) StoreUserCalls(stub func(*storage.User) error) {
+	fake.storeUserMutex.Lock()
+	defer fake.storeUserMutex.Unlock()
+	fake.StoreUserStub = stub
 }
 
-func (fake *StorageMock) StoreArgsForCall(i int) (string, interface{}) {
-	fake.storeMutex.RLock()
-	defer fake.storeMutex.RUnlock()
-	argsForCall := fake.storeArgsForCall[i]
-	return argsForCall.arg1, argsForCall.arg2
+func (fake *StorageMock) StoreUserArgsForCall(i int) *storage.User {
+	fake.storeUserMutex.RLock()
+	defer fake.storeUserMutex.RUnlock()
+	argsForCall := fake.storeUserArgsForCall[i]
+	return argsForCall.arg1
 }
 
-func (fake *StorageMock) StoreReturns(result1 error) {
-	fake.storeMutex.Lock()
-	defer fake.storeMutex.Unlock()
-	fake.StoreStub = nil
-	fake.storeReturns = struct {
+func (fake *StorageMock) StoreUserReturns(result1 error) {
+	fake.storeUserMutex.Lock()
+	defer fake.storeUserMutex.Unlock()
+	fake.StoreUserStub = nil
+	fake.storeUserReturns = struct {
 		result1 error
 	}{result1}
 }
 
-func (fake *StorageMock) StoreReturnsOnCall(i int, result1 error) {
-	fake.storeMutex.Lock()
-	defer fake.storeMutex.Unlock()
-	fake.StoreStub = nil
-	if fake.storeReturnsOnCall == nil {
-		fake.storeReturnsOnCall = make(map[int]struct {
+func (fake *StorageMock) StoreUserReturnsOnCall(i int, result1 error) {
+	fake.storeUserMutex.Lock()
+	defer fake.storeUserMutex.Unlock()
+	fake.StoreUserStub = nil
+	if fake.storeUserReturnsOnCall == nil {
+		fake.storeUserReturnsOnCall = make(map[int]struct {
 			result1 error
 		})
 	}
-	fake.storeReturnsOnCall[i] = struct {
+	fake.storeUserReturnsOnCall[i] = struct {
 		result1 error
 	}{result1}
 }
@@ -311,14 +238,12 @@ func (fake *StorageMock) StoreReturnsOnCall(i int, result1 error) {
 func (fake *StorageMock) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
-	fake.addUserMutex.RLock()
-	defer fake.addUserMutex.RUnlock()
-	fake.getMutex.RLock()
-	defer fake.getMutex.RUnlock()
 	fake.getUserByEmailMutex.RLock()
 	defer fake.getUserByEmailMutex.RUnlock()
-	fake.storeMutex.RLock()
-	defer fake.storeMutex.RUnlock()
+	fake.getUserByUUIDMutex.RLock()
+	defer fake.getUserByUUIDMutex.RUnlock()
+	fake.storeUserMutex.RLock()
+	defer fake.storeUserMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
 	for key, value := range fake.invocations {
 		copiedInvocations[key] = value

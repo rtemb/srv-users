@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/rtemb/srv-users/internal/storage"
+	srvUsers "github.com/rtemb/srv-users/pkg/client/srv-users"
 	"github.com/sirupsen/logrus"
 )
 
@@ -11,6 +12,7 @@ import (
 type ServiceHandler interface {
 	CreateUser(ctx context.Context, user storage.User) error
 	Auth(ctx context.Context, email string, pass string) (string, error)
+	AddRole(ctx context.Context, uuid string, role srvUsers.Role) error
 }
 
 type Handler struct {

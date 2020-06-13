@@ -5,7 +5,6 @@ import (
 	"net"
 
 	"github.com/garyburd/redigo/redis"
-	"github.com/google/uuid"
 	"github.com/pkg/errors"
 	"github.com/rtemb/srv-users/internal/config"
 )
@@ -16,7 +15,10 @@ type RedisStorage struct {
 
 var _ Storage = (*RedisStorage)(nil)
 
-var emailToUserIDSetName = "emailToUserIDSet:"
+const (
+	EmailToUserIDSet = "emailToUserID:"
+	UsersSet         = "users:"
+)
 
 func NewStorage(cfg *config.Redis) *RedisStorage {
 	redisPool := &redis.Pool{
@@ -37,39 +39,33 @@ func NewStorage(cfg *config.Redis) *RedisStorage {
 	return &RedisStorage{pool: redisPool}
 }
 
-func (r *RedisStorage) AddUser(user *User) error {
-	existUser, err := r.Get(user.Email)
-	if err != nil {
-		return errors.Wrap(err, UnableToCreateUser.Error())
+func (r *RedisStorage) StoreUser(user *User) error {
+	if user.ID == "" {
+		return errors.Wrap(UnableToStoreUser, "user.ID is not set")
 	}
-	if existUser != nil {
-		return errors.New(UnableToCreateUser.Error())
-	}
-
-	user.ID = uuid.New().String()
 
 	conn := r.pool.Get()
-	err = conn.Send("MULTI")
+	err := conn.Send("MULTI")
 	if err != nil {
-		return errors.Wrap(err, DataStoreError.Error())
+		return errors.Wrap(err, StorageError.Error())
 	}
-	err = conn.Send("SET", emailToUserIDSetName+user.Email, user.ID)
+	err = conn.Send("SET", EmailToUserIDSet+user.Email, user.ID)
 	if err != nil {
-		return errors.Wrap(err, DataStoreError.Error())
+		return errors.Wrap(err, StorageError.Error())
 	}
 
 	data, err := json.Marshal(user)
 	if err != nil {
 		return errors.Wrap(err, "can't store entry in storage")
 	}
-	err = conn.Send("SET", user.ID, data)
+	err = conn.Send("SET", UsersSet+user.ID, data)
 	if err != nil {
-		return errors.Wrap(err, DataStoreError.Error())
+		return errors.Wrap(err, StorageError.Error())
 	}
 
 	_, err = conn.Do("EXEC")
 	if err != nil {
-		return errors.Wrap(err, DataStoreError.Error())
+		return errors.Wrap(err, StorageError.Error())
 	}
 
 	return nil
@@ -77,8 +73,8 @@ func (r *RedisStorage) AddUser(user *User) error {
 
 func (r *RedisStorage) GetUserByEmail(email string) (*User, error) {
 	conn := r.pool.Get()
-	uID, err := conn.Do("GET", emailToUserIDSetName+email)
-	data, err := conn.Do("GET", uID)
+	uID, err := conn.Do("GET", EmailToUserIDSet+email)
+	data, err := conn.Do("GET", UsersSet+uID.(string))
 	if err != nil {
 		return nil, errors.Wrap(err, "can't get user from storage")
 	}
@@ -95,7 +91,26 @@ func (r *RedisStorage) GetUserByEmail(email string) (*User, error) {
 	return user, nil
 }
 
-func (r *RedisStorage) Store(key string, val interface{}) error {
+func (r *RedisStorage) GetUserByUUID(uuid string) (*User, error) {
+	conn := r.pool.Get()
+	data, err := conn.Do("GET", UsersSet+uuid)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't get user from storage")
+	}
+	if data == nil {
+		return nil, nil
+	}
+
+	user := &User{}
+	err = json.Unmarshal(data.([]byte), &user)
+	if err != nil {
+		return nil, errors.Wrap(err, "can't unmarshal user from storage")
+	}
+
+	return user, nil
+}
+
+func (r *RedisStorage) Set(key string, val interface{}) error {
 	j, err := json.Marshal(val)
 	if err != nil {
 		return errors.Wrap(err, "can't store entry in storage")

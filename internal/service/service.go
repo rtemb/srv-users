@@ -8,6 +8,7 @@ import (
 	"github.com/rtemb/srv-users/internal/storage"
 	"github.com/rtemb/srv-users/internal/token_encoder"
 	srvErr "github.com/rtemb/srv-users/pkg/client/errors"
+	srvUsers "github.com/rtemb/srv-users/pkg/client/srv-users"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -38,7 +39,7 @@ func (s *Service) CreateUser(ctx context.Context, user storage.User) error {
 
 	user.Password = string(hashedPass)
 	user.ID = uuid.New().String()
-	if err = s.store.AddUser(&user); err != nil {
+	if err = s.store.StoreUser(&user); err != nil {
 		return errors.Wrap(err, srvErr.UnableToCreateUser.Error())
 	}
 
@@ -62,4 +63,19 @@ func (s *Service) Auth(ctx context.Context, email string, pass string) (string, 
 	}
 
 	return token, err
+}
+
+func (s *Service) AddRole(ctx context.Context, uuid string, role srvUsers.Role) error {
+	user, err := s.store.GetUserByUUID(uuid)
+	if err != nil {
+		return errors.Wrap(err, srvErr.UnableToAddRole.Error())
+	}
+	user.Roles[role] = struct{}{}
+
+	err = s.store.StoreUser(user)
+	if err != nil {
+		return errors.Wrap(err, srvErr.UnableToAddRole.Error())
+	}
+
+	return nil
 }
