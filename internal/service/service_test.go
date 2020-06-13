@@ -109,3 +109,13 @@ func (a *ServiceSuite) Test_AddRole() {
 	err := a.service.AddRole(context.Background(), "tqwerty123", srvUsers.Role_USER)
 	a.Require().NoError(err)
 }
+
+func (a *ServiceSuite) Test_AddRole_UnknownUser() {
+	a.storageMock.GetUserByUUIDCalls(func(uuid string) (u *store.User, err error) {
+		return nil, nil
+	})
+
+	err := a.service.AddRole(context.Background(), "tqwerty123", srvUsers.Role_USER)
+	a.Error(err)
+	a.EqualError(srvErr.UserNotFound, err.Error())
+}

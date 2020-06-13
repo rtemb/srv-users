@@ -70,13 +70,17 @@ func (s *Service) Auth(ctx context.Context, email string, pass string) (string, 
 func (s *Service) AddRole(ctx context.Context, uuid string, role srvUsers.Role) error {
 	user, err := s.store.GetUserByUUID(uuid)
 	if err != nil {
-		return errors.Wrap(err, srvErr.UnableToAddRole.Error())
+		return errors.Wrap(srvErr.UnableToAddRole, err.Error())
 	}
+	if user == nil {
+		return srvErr.UserNotFound
+	}
+
 	user.Roles[role] = struct{}{}
 
 	err = s.store.StoreUser(user)
 	if err != nil {
-		return errors.Wrap(err, srvErr.UnableToAddRole.Error())
+		return errors.Wrap(srvErr.UnableToAddRole, err.Error())
 	}
 
 	return nil
