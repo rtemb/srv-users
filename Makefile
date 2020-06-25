@@ -1,9 +1,9 @@
-COVEROUT := ./coverage.out
 APP_NAME := srv-users
 OS := linux
 #OS := darwin
 
 VERSION_PATH := gitlab.com/rtemb/srv-users/pkg/version.ServiceVersion
+COVEROUT := ./coverage.out
 
 .PHONY: deps
 deps:
